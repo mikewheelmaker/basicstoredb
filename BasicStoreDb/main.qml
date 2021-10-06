@@ -10,13 +10,6 @@ Window {
     visible: true
     title: qsTr("BasicStoreDb")
 
-    ListModel {
-        id: itemsModel
-        ListElement { name: "Product #1"; regNumber: "0001" }
-        ListElement { name: "Product #2"; regNumber: "0002" }
-        ListElement { name: "Product #3"; regNumber: "0003" }
-    }
-
     Component {
         id: itemDelegate
 
@@ -114,7 +107,8 @@ Window {
                     text: "Clear"
 
                     onClicked: {
-                        //clear all data from db
+                        // clear data from DB
+                        ApplicationManager.clearDB();
                     }
                 }
 
@@ -150,6 +144,7 @@ Window {
 
                     onClicked: {
                         //safely close application
+                        close();
                     }
                 }
             }
@@ -177,6 +172,7 @@ Window {
 
                     onTextChanged: {
                         //update proxy model
+                        ApplicationManager.searchProxy(0, inputItemName.text)
                     }
 
                     onEditingFinished: inputItemName.text = ""
@@ -192,6 +188,7 @@ Window {
 
                     onClicked: {
                         //set proxy search direction as ascending
+                        ApplicationManager.sortProxy(0, true)
                     }
                 }
 
@@ -205,6 +202,7 @@ Window {
 
                     onClicked: {
                         //set proxy search direction as descending
+                        ApplicationManager.sortProxy(0, false)
                     }
                 }
             }
@@ -227,7 +225,7 @@ Window {
 
                 clip: true
 
-                model: itemsModel
+                model: ApplicationManager.itemProxyModel
                 delegate: itemDelegate
             }
         }

@@ -1,6 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
+#include "applicationmanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +19,10 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    ApplicationManager manager;
+    engine.rootContext()->setContextProperty("ApplicationManager", &manager);
+
     engine.load(url);
 
     return app.exec();
