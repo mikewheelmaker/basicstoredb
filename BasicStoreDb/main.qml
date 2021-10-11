@@ -3,6 +3,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQml
+import QtQuick.Controls.Material
 
 Window {
     width: 640
@@ -16,7 +17,7 @@ Window {
         RowLayout {
             id: itemLayoutContainer
 
-            width: parent.width
+            width: 600
             height: 40
 
             Text {
@@ -39,7 +40,9 @@ Window {
             Button {
                 id: deleteItem
 
-                Layout.preferredHeight: 20
+                Material.background: "white"
+
+                Layout.preferredHeight: 30
                 Layout.preferredWidth: 20
                 Layout.alignment: Qt.AlignRight
 
@@ -57,7 +60,7 @@ Window {
 
         anchors.fill: parent
 
-        spacing: 2
+        spacing: 0
 
         Rectangle {
             id: menuBackgroundRectangle
@@ -183,7 +186,7 @@ Window {
                 Button {
                     id: nameAscSortButton
 
-                    Layout.preferredHeight: 20
+                    Layout.preferredHeight: 30
                     Layout.preferredWidth: 20
 
                     text: "^"
@@ -197,7 +200,7 @@ Window {
                 Button {
                     id: nameDescSortButton
 
-                    Layout.preferredHeight: 20
+                    Layout.preferredHeight: 30
                     Layout.preferredWidth: 20
 
                     text: "v"
@@ -210,7 +213,7 @@ Window {
             }
         }
 
-        Rectangle {
+       Rectangle {
             id: listViewBackgroundRectangle
 
             Layout.fillHeight: true

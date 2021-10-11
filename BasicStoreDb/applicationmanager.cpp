@@ -30,7 +30,6 @@ ApplicationManager::ApplicationManager(QObject* parent) :
 
 ApplicationManager::~ApplicationManager()
 {
-    exportDB();
     delete m_model;
     delete m_proxy;
     delete m_dbManager;
@@ -102,12 +101,16 @@ void ApplicationManager::importDB()
     QFile temporaryFile {"Produse.csv"};
     if(temporaryFile.open(QIODevice::ReadOnly))
     {
+        int numberOfLines = 0;
         QTextStream line {&temporaryFile};
         while(!line.atEnd())
         {
             QString lineString = line.readLine();
             QStringList lineTokens = lineString.split(",");
             addItem(lineTokens.at(0), lineTokens.at(1));
+            ++numberOfLines;
+            //if(numberOfLines == 18)
+                //break;
         }
     }
     else
