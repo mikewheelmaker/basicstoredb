@@ -70,7 +70,22 @@ bool DatabaseManager::insertItem(const QString& name, const QString& regNumber)
     }
     else
     {
-        qDebug() << "insertItem: item already exists";
+        if(!selectItem(regNumber, RegNumber))
+        {
+            if (query.exec())
+            {
+                qDebug() << "insertItem: item was inserted successfully";
+                success = true;
+            }
+            else
+            {
+                qDebug() << "insertItem: error" << query.lastError();
+            }
+        }
+        else
+        {
+            qDebug() << "insertItem: item already exists";
+        }
     }
 
     return success;

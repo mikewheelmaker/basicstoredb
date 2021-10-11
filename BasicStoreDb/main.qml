@@ -48,9 +48,7 @@ Window {
 
                 text: "X"
 
-                onClicked: {
-                    ApplicationManager.removeItem(index);
-                }
+                onClicked: ApplicationManager.removeItem(index)
             }
         }
     }
@@ -127,19 +125,6 @@ Window {
                 }
 
                 Button {
-                    id: helpButton
-
-                    Layout.preferredHeight: 30
-                    Layout.preferredWidth: 100
-
-                    text: "Help"
-
-                    onClicked: {
-                        //open help window
-                    }
-                }
-
-                Button {
                     id: exitButton
 
                     Layout.preferredHeight: 30
@@ -177,7 +162,7 @@ Window {
 
                     onTextChanged: {
                         //update proxy model
-                        ApplicationManager.searchProxy(0, inputItemName.text)
+                        ApplicationManager.searchProxy(0, inputItemName.text.toUpperCase())
                     }
 
                     onEditingFinished: inputItemName.text = ""
@@ -229,6 +214,10 @@ Window {
                 anchors.rightMargin: 5
 
                 clip: true
+                reuseItems: true
+                cacheBuffer: 20
+
+                onFlickEnded: gc()
 
                 model: ApplicationManager.itemProxyModel
                 delegate: itemDelegate

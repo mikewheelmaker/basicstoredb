@@ -101,17 +101,14 @@ void ApplicationManager::importDB()
     QFile temporaryFile {"Produse.csv"};
     if(temporaryFile.open(QIODevice::ReadOnly))
     {
-        int numberOfLines = 0;
-        QTextStream line {&temporaryFile};
-        while(!line.atEnd())
+        QTextStream lines {&temporaryFile};
+        while(!lines.atEnd())
         {
-            QString lineString = line.readLine();
-            QStringList lineTokens = lineString.split(",");
+            QString lineString = lines.readLine();
+            QStringList lineTokens = lineString.split(", ");
             addItem(lineTokens.at(0), lineTokens.at(1));
-            ++numberOfLines;
-            //if(numberOfLines == 18)
-                //break;
         }
+        temporaryFile.close();
     }
     else
     {
@@ -130,6 +127,7 @@ void ApplicationManager::exportDB()
         {
             out << dbContent[i].name << ',' << dbContent[i].regNumber << '\n';
         }
+        temporaryFile.close();
     }
     else
     {
