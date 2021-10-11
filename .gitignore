@@ -1,7 +1,3 @@
-# This file is used to ignore files which are generated
-# ----------------------------------------------------------------------------
-
-*~
 *.autosave
 *.a
 *.core
@@ -33,8 +29,8 @@ qrc_*.cpp
 Thumbs.db
 *.res
 *.rc
-/.qmake.cache
-/.qmake.stash
+.qmake.cache
+.qmake.stash
 
 # qtcreator generated files
 *.pro.user*
@@ -88,8 +84,6 @@ Thumbs.db
 object_script.*.Release
 object_script.*.Debug
 *_plugin_import.cpp
-/.qmake.cache
-/.qmake.stash
 *.pro.user
 *.pro.user.*
 *.qbs.user
