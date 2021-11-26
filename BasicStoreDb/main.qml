@@ -1,54 +1,178 @@
-import QtQuick
-import QtQuick.Window
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQml
-import QtQuick.Controls.Material
+import QtQuick 2.12
+import QtQuick.Window 2.12
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.0
+import QtQml 2.0
+import QtQuick.Controls.Material 2.0
 
 Window {
+    id: mainWindow
     width: 640
     height: 480
     visible: true
     title: qsTr("BasicStoreDb")
 
+    property int itemIndex: -1
+
+    Dialog {
+        id: confirmDeleteItemDialog
+
+        title: "Delete item?"
+        width: 200
+        height: 150
+        anchors.centerIn: parent
+
+        ColumnLayout {
+            id: deleteDialogWindowContainer
+
+            anchors.fill: parent
+
+            RowLayout {
+                id: deleteItemOptionsContainer
+
+                Layout.fillWidth: true
+
+                Button {
+                    id: deleteItemDialogAcceptButton
+
+                    text: "Yes"
+                    font.pixelSize: 20
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    onClicked: {
+                        ApplicationManager.removeItem(itemIndex)
+                        itemIndex = -1
+                        confirmDeleteItemDialog.accept()
+                    }
+                }
+
+                Button {
+                    id: deleteItemDialogCancelButton
+
+                    text: "No"
+                    font.pixelSize: 20
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    onClicked: confirmDeleteItemDialog.close()
+                }
+            }
+        }
+    }
+
+    Dialog {
+        id: addItemDialog
+
+        title: "Add item"
+        width: 400
+        height: 150
+        anchors.centerIn: parent
+
+        ColumnLayout {
+            id: addItemDialogWindowContainer
+
+            anchors.fill: parent
+
+            RowLayout {
+                id: addItemInputContainer
+
+                Layout.fillWidth: true
+
+                TextField {
+                    id: newItemName
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 30
+
+                    placeholderText: qsTr("Item Name")
+                }
+
+                TextField {
+                    id: newItemRegNumber
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 30
+
+                    placeholderText: qsTr("Registration Number")
+                }
+            }
+
+            RowLayout {
+                id: addItemOptionsContainer
+
+                Layout.fillWidth: true
+
+                Button {
+                    id: addItemDialogAcceptButton
+
+                    text: "Add item"
+                    font.pixelSize: 20
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    onClicked: {
+                        ApplicationManager.addItem(newItemName.text, newItemRegNumber.text)
+                        addItemDialog.accept()
+                    }
+                }
+
+                Button {
+                    id: addItemDialogCancelButton
+
+                    text: "Cancel"
+                    font.pixelSize: 20
+                    Layout.alignment: Qt.AlignCenter
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    onClicked: addItemDialog.close()
+                }
+            }
+        }
+    }
+
     Component {
         id: itemDelegate
 
-        RowLayout {
-            id: itemLayoutContainer
-
-            width: 600
+        Rectangle {
+            id: itemDelegateContainer
+            width: mainWindow.width - 10
             height: 40
+            color: "transparent"
 
-            Text {
-                id: itemName
+            MouseArea {
+                id: itemSelectionArea
 
-                text: name
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignLeft
-                font.pointSize: 20
+                width: itemDelegateContainer.width
+                height: itemDelegateContainer.height
+
+                onDoubleClicked: {
+                    itemIndex = index
+                    confirmDeleteItemDialog.open()
+                }
             }
 
-            Text {
-                id: itemRegNumber
+            RowLayout {
+                id: itemLayoutContainer
+                width: itemDelegateContainer.width
+                height: itemDelegateContainer.height
 
-                text: regNumber
-                font.pointSize: 20
-            }
+                Text {
+                    id: itemName
 
-            Button {
-                id: deleteItem
+                    text: name
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignLeft
+                    font.pointSize: 20
+                }
 
-                Material.background: "white"
+                Text {
+                    id: itemRegNumber
 
-                Layout.preferredHeight: 30
-                Layout.preferredWidth: 20
-                Layout.alignment: Qt.AlignRight
-
-                text: "X"
-
-                onClicked: ApplicationManager.removeItem(index)
+                    text: regNumber
+                    font.pointSize: 20
+                }
             }
         }
     }
@@ -74,17 +198,14 @@ Window {
                 anchors.fill: parent
 
                 Button {
-                    id: importDataButton
+                    id: addItemButton
 
                     Layout.preferredHeight: 30
-                    Layout.preferredWidth: 100
+                    Layout.preferredWidth: 110
 
-                    text: "Import"
+                    text: "Add item"
 
-                    onClicked: {
-                        //import data from csv into db
-                        ApplicationManager.importDB();
-                    }
+                    onClicked: addItemDialog.open()
                 }
 
                 Button {
@@ -95,10 +216,7 @@ Window {
 
                     text: "Export"
 
-                    onClicked: {
-                        //export data from db into csv
-                        ApplicationManager.exportDB();
-                    }
+                    onClicked: ApplicationManager.exportDB()
                 }
 
                 Button {
@@ -109,10 +227,7 @@ Window {
 
                     text: "Clear"
 
-                    onClicked: {
-                        // clear data from DB
-                        ApplicationManager.clearDB();
-                    }
+                    onClicked: ApplicationManager.clearDB()
                 }
 
                 Rectangle {
@@ -132,10 +247,7 @@ Window {
 
                     text: "Exit"
 
-                    onClicked: {
-                        //safely close application
-                        close();
-                    }
+                    onClicked: close()
                 }
             }
         }
@@ -160,12 +272,9 @@ Window {
 
                     placeholderText: qsTr("Enter item name here")
 
-                    onTextChanged: {
-                        //update proxy model
-                        ApplicationManager.searchProxy(0, inputItemName.text.toUpperCase())
-                    }
+                    onTextChanged: ApplicationManager.searchProxy(0, inputItemName.text.toUpperCase())
 
-                    onEditingFinished: inputItemName.text = ""
+                    //onEditingFinished: inputItemName.text = ""
                 }
 
                 Button {
@@ -176,10 +285,7 @@ Window {
 
                     text: "^"
 
-                    onClicked: {
-                        //set proxy search direction as ascending
-                        ApplicationManager.sortProxy(0, true)
-                    }
+                    onClicked: ApplicationManager.sortProxy(0, true)
                 }
 
                 Button {
@@ -190,10 +296,7 @@ Window {
 
                     text: "v"
 
-                    onClicked: {
-                        //set proxy search direction as descending
-                        ApplicationManager.sortProxy(0, false)
-                    }
+                    onClicked: ApplicationManager.sortProxy(0, false)
                 }
             }
         }
@@ -214,7 +317,7 @@ Window {
                 anchors.rightMargin: 5
 
                 clip: true
-                reuseItems: true
+                //reuseItems: true
                 cacheBuffer: 20
 
                 onFlickEnded: gc()

@@ -97,7 +97,6 @@ void ApplicationManager::clearDB()
 
 void ApplicationManager::importDB()
 {
-    clearDB();
     QFile temporaryFile {"Produse.csv"};
     if(temporaryFile.open(QIODevice::ReadOnly))
     {
@@ -105,7 +104,7 @@ void ApplicationManager::importDB()
         while(!lines.atEnd())
         {
             QString lineString = lines.readLine();
-            QStringList lineTokens = lineString.split(", ");
+            QStringList lineTokens = lineString.split(",");
             addItem(lineTokens.at(0), lineTokens.at(1));
         }
         temporaryFile.close();
